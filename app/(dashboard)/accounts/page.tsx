@@ -2,6 +2,7 @@
 
 import { Loader2, Plus } from 'lucide-react'
 
+import { useBulkDelete } from '@/features/accounts/api/useBulkDelete'
 import { useNewAccount } from '@/features/accounts/hooks/useNewAccount'
 import { useGetAccounts } from '@/features/accounts/api/useGetAccounts'
 
@@ -15,7 +16,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 export default function Page() {
     const newAccount = useNewAccount()
     const accountsQuery = useGetAccounts()
+    const deleteAccounts = useBulkDelete()
+
     const accounts = accountsQuery.data || []
+
+    const isDisabled = accountsQuery.isLoading || deleteAccounts.isPending
 
     if (accountsQuery.isLoading) {
         return (
@@ -51,8 +56,11 @@ export default function Page() {
                         filterKey="email"
                         columns={columns}
                         data={accounts}
-                        onDelete={() => {}}
-                        disabled={false}
+                        onDelete={row => {
+                            const ids = row.map(r => r.original.id)
+                            deleteAccounts.mutate({ ids })
+                        }}
+                        disabled={isDisabled}
                     />
                 </CardContent>
             </Card>

@@ -83,6 +83,10 @@ export function DataTable<TData, TValue>({
                 />
                 {table.getFilteredSelectedRowModel().rows.length > 0 && (
                     <Button
+                        onClick={() => {
+                            onDelete(table.getFilteredSelectedRowModel().rows)
+                            table.resetRowSelection()
+                        }}
                         disabled={disabled}
                         size="sm"
                         variant="outline"
