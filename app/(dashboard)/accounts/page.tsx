@@ -1,45 +1,38 @@
 'use client'
 
-import { Plus } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 
 import { useNewAccount } from '@/features/accounts/hooks/useNewAccount'
+import { useGetAccounts } from '@/features/accounts/api/useGetAccounts'
 
-import { Payment, columns } from './columns'
+import { columns } from './columns'
 
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/DataTable'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card'
-
-const data: Payment[] = [
-    {
-        id: '728ed52f',
-        amount: 100,
-        status: 'pending',
-        email: 'm@example.com',
-    },
-    {
-        id: '728ed52f',
-        amount: 50,
-        status: 'pending',
-        email: 'pm@example.com',
-    },
-    {
-        id: '728ed52f',
-        amount: 70,
-        status: 'pending',
-        email: 'am@example.com',
-    },
-]
+import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Page() {
     const newAccount = useNewAccount()
+    const accountsQuery = useGetAccounts()
+    const accounts = accountsQuery.data || []
+
+    if (accountsQuery.isLoading) {
+        return (
+            <div className="mx-auto -mt-24 w-full max-w-screen-2xl pb-10">
+                <Card className="border-none drop-shadow-sm">
+                    <CardHeader>
+                        <Skeleton className="h-8 w-48" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex h-[500px] w-full items-center justify-center">
+                            <Loader2 className="size-6 animate-spin text-slate-300" />
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        )
+    }
 
     return (
         <div className="mx-auto -mt-24 w-full max-w-screen-2xl pb-10">
@@ -57,7 +50,7 @@ export default function Page() {
                     <DataTable
                         filterKey="email"
                         columns={columns}
-                        data={data}
+                        data={accounts}
                         onDelete={() => {}}
                         disabled={false}
                     />
