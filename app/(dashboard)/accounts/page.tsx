@@ -53,7 +53,7 @@ export default function Page() {
                 </CardHeader>
                 <CardContent>
                     <DataTable
-                        filterKey="email"
+                        filterKey="name"
                         columns={columns}
                         data={accounts}
                         onDelete={row => {
