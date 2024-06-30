@@ -2,9 +2,9 @@
 
 import { Loader2, Plus } from 'lucide-react'
 
-import { useBulkDelete } from '@/features/accounts/api/useBulkDelete'
-import { useNewAccount } from '@/features/accounts/hooks/useNewAccount'
-import { useGetAccounts } from '@/features/accounts/api/useGetAccounts'
+import { useNewCategory } from '@/features/categories/hooks/useNewCategory'
+import { useGetCategories } from '@/features/categories/api/useGetCategories'
+import { useBulkDeleteCategories } from '@/features/categories/api/useBulkDeleteCategories'
 
 import { columns } from './columns'
 
@@ -14,15 +14,15 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Page() {
-    const newAccount = useNewAccount()
-    const accountsQuery = useGetAccounts()
-    const deleteAccounts = useBulkDelete()
+    const newCategory = useNewCategory()
+    const categoriesQuery = useGetCategories()
+    const deleteCategories = useBulkDeleteCategories()
 
-    const accounts = accountsQuery.data || []
+    const accounts = categoriesQuery.data || []
 
-    const isDisabled = accountsQuery.isLoading || deleteAccounts.isPending
+    const isDisabled = categoriesQuery.isLoading || deleteCategories.isPending
 
-    if (accountsQuery.isLoading) {
+    if (categoriesQuery.isLoading) {
         return (
             <div className="mx-auto -mt-24 w-full max-w-screen-2xl pb-10">
                 <Card className="border-none drop-shadow-sm">
@@ -44,9 +44,9 @@ export default function Page() {
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="line-clamp-1 text-xl">
-                        Accounts
+                        Categories
                     </CardTitle>
-                    <Button size="sm" onClick={newAccount.onOpen}>
+                    <Button size="sm" onClick={newCategory.onOpen}>
                         <Plus className="mr-2 size-4" />
                         Add new
                     </Button>
@@ -58,7 +58,7 @@ export default function Page() {
                         data={accounts}
                         onDelete={row => {
                             const ids = row.map(r => r.original.id)
-                            deleteAccounts.mutate({ ids })
+                            deleteCategories.mutate({ ids })
                         }}
                         disabled={isDisabled}
                     />
